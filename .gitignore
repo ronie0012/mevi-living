@@ -36,3 +36,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# database
+local.db
+*.db
+
+# test files
+test-*.js
+test-*.ts
