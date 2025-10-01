@@ -15,7 +15,7 @@ interface Product {
 const products: Product[] = [
   {
     name: "Cuddle Mug",
-    href: "https://meviliving.com/products/cuddle-mug",
+    href: "/products/cuddle-mug",
     image1: "https://meviliving.com/cdn/shop/files/CuddleMug_1.jpg?v=1751434799&width=533",
     image2: "https://meviliving.com/cdn/shop/files/CuddleMug_2.jpg?v=1751434799&width=533",
     price: "₹ 449.00",
@@ -24,14 +24,14 @@ const products: Product[] = [
   },
   {
     name: "Heartlet Mug",
-    href: "https://meviliving.com/products/heartlet-mug",
+    href: "/products/heartlet-mug",
     image1: "https://meviliving.com/cdn/shop/files/Heartlet_Mug_4.jpg?v=1751440636&width=533",
     image2: "https://meviliving.com/cdn/shop/files/HeartletMug_2.jpg?v=1751440636&width=533",
     price: "₹ 499.00",
   },
   {
     name: "Grisaille Handi Pot",
-    href: "https://meviliving.com/products/grisaille-handi-pot",
+    href: "/products/grisaille-handi-pot",
     image1: "https://meviliving.com/cdn/shop/files/GrisailleHandiPot_1.jpg?v=1751451479&width=533",
     image2: "https://meviliving.com/cdn/shop/files/GrisailleHandiPot_2.jpg?v=1751451479&width=533",
     price: "₹ 1,199.00",
@@ -99,7 +99,7 @@ export default function WhatsNew() {
         </div>
         <div className="mt-12 text-center">
           <Link
-            href="https://meviliving.com/collections/new"
+            href="/collections/new"
             className="inline-block border border-primary text-primary bg-transparent text-button font-medium py-3.5 px-10 rounded-sm transition-colors duration-300 hover:bg-primary hover:text-primary-foreground"
           >
             VIEW ALL
