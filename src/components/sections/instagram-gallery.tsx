@@ -28,7 +28,7 @@ const galleryItems: GalleryItem[] = [
   { id: 16, type: "image"},
 ];
 
-const InstagramGallery = (): JSX.Element => {
+const InstagramGallery = () => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [isAtStart, setIsAtStart] = useState(true);
     const [isAtEnd, setIsAtEnd] = useState(false);

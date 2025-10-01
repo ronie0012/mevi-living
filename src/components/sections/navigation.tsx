@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Search, ShoppingCart, User, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useCart } from "@/contexts/CartContext";
 
 const navigationLinks = [
   { href: "/collections/drinkware", label: "Drinkware" },
@@ -16,6 +17,7 @@ const navigationLinks = [
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { cart } = useCart();
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-border">
@@ -55,10 +57,15 @@ export default function Navigation() {
             </button>
             <Link
               href="/cart"
-              aria-label="Shopping cart"
-              className="text-foreground hover:text-accent transition-colors"
+              aria-label={`Shopping cart with ${cart.totalItems} items`}
+              className="text-foreground hover:text-accent transition-colors relative"
             >
               <ShoppingCart className="h-5 w-5" />
+              {cart.totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium min-w-[1.25rem] px-1">
+                  {cart.totalItems > 99 ? '99+' : cart.totalItems}
+                </span>
+              )}
             </Link>
             <Link
               href="/account"

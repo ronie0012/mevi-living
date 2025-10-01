@@ -2,6 +2,10 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { getProduct, formatPrice } from '@/lib/products';
+import { AddToCartButton } from '@/components/ui/AddToCartButton';
+import { BuyNowButton } from '@/components/ui/BuyNowButton';
+import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: "Grisaille Handi Pot - Mevi Living",
@@ -9,6 +13,12 @@ export const metadata: Metadata = {
 };
 
 export default function GrisailleHandiPotPage() {
+  const product = getProduct('grisaille-handi-pot');
+  
+  if (!product) {
+    notFound();
+  }
+
   return (
     <main className="min-h-screen bg-background py-12">
       <div className="container">
@@ -56,45 +66,42 @@ export default function GrisailleHandiPotPage() {
           {/* Product Info */}
           <div className="space-y-6">
             <div>
-              <h1 className="font-display text-h1 text-foreground mb-2">Grisaille Handi Pot</h1>
+              <h1 className="font-display text-h1 text-foreground mb-2">{product.name}</h1>
               <div className="flex items-baseline gap-3">
-                <span className="text-h3 font-semibold text-foreground">₹ 1,199.00</span>
+                <span className="text-h3 font-semibold text-foreground">{formatPrice(product.price)}</span>
+                {product.originalPrice && (
+                  <span className="text-xl text-muted-foreground line-through">{formatPrice(product.originalPrice)}</span>
+                )}
               </div>
             </div>
 
             <div className="border-t border-border pt-6">
               <h3 className="font-display text-h4 mb-3">Product Description</h3>
               <p className="text-text-secondary leading-relaxed mb-4">
-                The Grisaille Handi Pot is a beautifully crafted ceramic pot with a lid, perfect for serving traditional dishes or storing dry goods. 
-                Its elegant grisaille finish adds a touch of sophistication to any table setting or kitchen storage.
+                {product.description}
               </p>
               <ul className="space-y-2 text-text-secondary">
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Premium ceramic with lid</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Elegant grisaille finish</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Multi-purpose use (serving & storage)</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Durable and easy to clean</span>
-                </li>
+                {product.features.map((feature, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="mr-2">•</span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
               </ul>
             </div>
 
             <div className="space-y-4 pt-6">
-              <button className="w-full bg-primary text-primary-foreground py-4 px-8 rounded-sm font-medium text-button hover:bg-primary/90 transition-colors">
-                ADD TO CART
-              </button>
-              <button className="w-full border border-primary text-primary py-4 px-8 rounded-sm font-medium text-button hover:bg-primary hover:text-primary-foreground transition-colors">
-                BUY NOW
-              </button>
+              <AddToCartButton 
+                product={product} 
+                size="lg"
+                className="rounded-sm py-4"
+                showQuantitySelector={true}
+              />
+              <BuyNowButton 
+                product={product} 
+                size="lg"
+                className="rounded-sm py-4"
+              />
             </div>
 
             <div className="border-t border-border pt-6 space-y-4">
