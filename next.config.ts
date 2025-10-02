@@ -6,14 +6,11 @@ const LOADER = path.resolve(__dirname, 'src/visual-edits/component-tagger-loader
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-      {
-        protocol: 'http',
-        hostname: '**',
-      },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'via.placeholder.com' },
+      { protocol: 'https', hostname: 'meviliving.com' },
+      { protocol: 'https', hostname: 'cdn.shopify.com' },
+      { protocol: 'https', hostname: 'slelguoygbfzlpylpxfs.supabase.co' },
     ],
   },
   outputFileTracingRoot: path.resolve(__dirname, '../../'),
