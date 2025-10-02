@@ -1,5 +1,5 @@
 import { db } from './db';
-import { orders, orderItems } from './schema';
+import { orders, orderItems } from '../db/schema';
 import { CreateOrderData, Order } from './types';
 import { eq, desc, and } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
