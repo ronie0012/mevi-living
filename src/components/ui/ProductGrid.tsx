@@ -13,7 +13,7 @@ export function ProductGrid({ products, currentPage = 1 }: ProductGridProps) {
 
   if (products.length === 0) {
     return (
-      <div 
+      <div
         id="product-grid"
         className="text-center py-16"
       >
@@ -33,14 +33,14 @@ export function ProductGrid({ products, currentPage = 1 }: ProductGridProps) {
   }
 
   return (
-    <div 
+    <div
       id="product-grid"
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8"
     >
       {products.map((product, index) => (
-        <ProductCard 
-          key={product.id} 
-          product={product} 
+        <ProductCard
+          key={product.id}
+          product={product}
           priority={currentPage === 1 && index < 4} // Prioritize first 4 images on first page
         />
       ))}

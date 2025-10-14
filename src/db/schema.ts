@@ -218,3 +218,109 @@ export const rolePermissionsRelations = relations(rolePermissions, ({ one }) => 
     references: [permissions.id],
   }),
 }));
+
+// Chat sessions table
+export const chatSessions = sqliteTable("chatSessions", {
+  id: text("id").primaryKey(),
+  userId: text("userId").references(() => user.id, { onDelete: "cascade" }),
+  sessionId: text("sessionId").notNull().unique(), // For anonymous users
+  isActive: integer("isActive", { mode: "boolean" }).notNull().default(true),
+  userAgent: text("userAgent"),
+  ipAddress: text("ipAddress"),
+  startedAt: integer("startedAt", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .notNull(),
+  endedAt: integer("endedAt", { mode: "timestamp" }),
+  customerSatisfactionRating: integer("customerSatisfactionRating"), // 1-5 scale
+  tags: text("tags"), // JSON array of tags for categorization
+});
+
+// Chat messages table
+export const chatMessages = sqliteTable("chatMessages", {
+  id: text("id").primaryKey(),
+  sessionId: text("sessionId")
+    .notNull()
+    .references(() => chatSessions.id, { onDelete: "cascade" }),
+  senderId: text("senderId"), // userId for logged users, null for anonymous
+  senderType: text("senderType").notNull(), // 'user', 'agent', 'bot'
+  message: text("message").notNull(),
+  messageType: text("messageType").notNull().default("text"), // 'text', 'image', 'file', 'system'
+  metadata: text("metadata"), // JSON for additional data (file info, etc.)
+  isRead: integer("isRead", { mode: "boolean" }).notNull().default(false),
+  sentAt: integer("sentAt", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+// Chat agents table (extends user table for customer service agents)
+export const chatAgents = sqliteTable("chatAgents", {
+  id: text("id").primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  isOnline: integer("isOnline", { mode: "boolean" }).notNull().default(false),
+  currentSessions: integer("currentSessions").notNull().default(0),
+  maxSessions: integer("maxSessions").notNull().default(5),
+  specialties: text("specialties"), // JSON array of specialties
+  lastActiveAt: integer("lastActiveAt", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+// Chat session assignments (which agent handles which session)
+export const chatSessionAssignments = sqliteTable("chatSessionAssignments", {
+  id: text("id").primaryKey(),
+  sessionId: text("sessionId")
+    .notNull()
+    .references(() => chatSessions.id, { onDelete: "cascade" }),
+  agentId: text("agentId")
+    .notNull()
+    .references(() => chatAgents.id, { onDelete: "cascade" }),
+  assignedAt: integer("assignedAt", { mode: "timestamp" })
+    .$defaultFn(() => new Date())
+    .notNull(),
+  endedAt: integer("endedAt", { mode: "timestamp" }),
+});
+
+// Chat sessions relations
+export const chatSessionsRelations = relations(chatSessions, ({ one, many }) => ({
+  user: one(user, {
+    fields: [chatSessions.userId],
+    references: [user.id],
+  }),
+  messages: many(chatMessages),
+  assignments: many(chatSessionAssignments),
+}));
+
+// Chat messages relations
+export const chatMessagesRelations = relations(chatMessages, ({ one }) => ({
+  session: one(chatSessions, {
+    fields: [chatMessages.sessionId],
+    references: [chatSessions.id],
+  }),
+  sender: one(user, {
+    fields: [chatMessages.senderId],
+    references: [user.id],
+  }),
+}));
+
+// Chat agents relations
+export const chatAgentsRelations = relations(chatAgents, ({ one, many }) => ({
+  user: one(user, {
+    fields: [chatAgents.userId],
+    references: [user.id],
+  }),
+  assignments: many(chatSessionAssignments),
+}));
+
+// Chat session assignments relations
+export const chatSessionAssignmentsRelations = relations(chatSessionAssignments, ({ one }) => ({
+  session: one(chatSessions, {
+    fields: [chatSessionAssignments.sessionId],
+    references: [chatSessions.id],
+  }),
+  agent: one(chatAgents, {
+    fields: [chatSessionAssignments.agentId],
+    references: [chatAgents.id],
+  }),
+}));

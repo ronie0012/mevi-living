@@ -233,3 +233,44 @@
 nextjs-portal {
   display: none !important;
 }
+
+/* Simple Chat Widget Styles */
+.mevi-living-chat-widget {
+  z-index: 999999 !important;
+  isolation: isolate !important;
+  pointer-events: auto !important;
+}
+
+.mevi-living-chat-widget * {
+  box-sizing: border-box;
+}
+
+/* Ensure chat input is always visible */
+.mevi-living-chat-widget [data-chat-modal] {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 500px !important;
+  max-height: 500px !important;
+}
+
+.mevi-living-chat-widget input[type="text"] {
+  min-height: 40px !important;
+  padding: 8px 12px !important;
+  border: 1px solid #e5e5e5 !important;
+  border-radius: 6px !important;
+  background: white !important;
+}
+
+/* Simple fix for carousel conflicts */
+.absolute.inset-0:not(.mevi-living-chat-widget *) {
+  z-index: 1 !important;
+}
+
+img.object-cover:not(.mevi-living-chat-widget *) {
+  z-index: 1 !important;
+}
+
+/* Hide problematic unnamed divs */
+body > div:not([class]):not([id]):not([data-chat-widget]) {
+  z-index: 1 !important;
+}

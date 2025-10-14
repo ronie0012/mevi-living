@@ -6,6 +6,9 @@ import Script from "next/script";
 import Navigation from "@/components/sections/navigation";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/contexts/CartContext";
+import { ChatProvider } from "@/contexts/ChatContext";
+import { ChatWidget } from "@/components/ui/chat/ChatWidget";
+// Removed aggressive conflict resolution components
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -32,8 +35,11 @@ export default function RootLayout({
           data-custom-data='{"appName": "YourApp", "version": "1.0.0", "greeting": "hi"}'
         />
         <CartProvider>
-          <Navigation />
-          {children}
+          <ChatProvider>
+            <Navigation />
+            {children}
+            <ChatWidget />
+          </ChatProvider>
         </CartProvider>
         <Toaster />
         <VisualEditsMessenger />

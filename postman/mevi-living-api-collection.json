@@ -1,0 +1,655 @@
+{
+	"info": {
+		"_postman_id": "12345678-1234-1234-1234-123456789abc",
+		"name": "Mevi Living API Collection",
+		"description": "Complete API collection for testing Mevi Living application endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Auth Handler (GET)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/sign-in",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "sign-in"]
+						},
+						"description": "Authentication GET endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Auth Handler (POST)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{test_email}}\",\n  \"password\": \"{{test_password}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/sign-in",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "sign-in"]
+						},
+						"description": "Authentication POST endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/verify-token",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "verify-token"]
+						},
+						"description": "Verify authentication token"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication related endpoints"
+		},
+		{
+			"name": "JWT Testing",
+			"item": [
+				{
+					"name": "Generate JWT Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const responseJson = pm.response.json();",
+									"    if (responseJson.success && responseJson.token) {",
+									"        pm.environment.set('jwt_token', responseJson.token);",
+									"        pm.test('JWT token generated successfully', function () {",
+									"            pm.expect(responseJson.success).to.be.true;",
+									"            pm.expect(responseJson.token).to.not.be.empty;",
+									"        });",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/test-jwt",
+							"host": ["{{base_url}}"],
+							"path": ["api", "test-jwt"]
+						},
+						"description": "Generate JWT token for authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Verify JWT Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has success flag', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.success).to.be.true;",
+									"});",
+									"",
+									"pm.test('JWT payload is valid', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.payload).to.be.an('object');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/test-jwt",
+							"host": ["{{base_url}}"],
+							"path": ["api", "test-jwt"]
+						},
+						"description": "Verify JWT token validity"
+					},
+					"response": []
+				}
+			],
+			"description": "JWT token generation and verification"
+		},
+		{
+			"name": "Admin - Users Management",
+			"item": [
+				{
+					"name": "Get All Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has success flag', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.success).to.be.true;",
+									"});",
+									"",
+									"pm.test('Users array is present', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.users).to.be.an('array');",
+									"});",
+									"",
+									"pm.test('Response time is acceptable', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/admin/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "users"]
+						},
+						"description": "Fetch all users (Admin only)"
+					},
+					"response": []
+				}
+			],
+			"description": "Admin endpoints for user management"
+		},
+		{
+			"name": "Admin - Role Management",
+			"item": [
+				{
+					"name": "Get All Roles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has success flag', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.success).to.be.true;",
+									"});",
+									"",
+									"pm.test('Roles array is present', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.roles).to.be.an('array');",
+									"});",
+									"",
+									"if (pm.response.json().roles.length > 0) {",
+									"    pm.test('Role objects have required properties', function () {",
+									"        const responseJson = pm.response.json();",
+									"        const firstRole = responseJson.roles[0];",
+									"        pm.expect(firstRole).to.have.property('id');",
+									"        pm.expect(firstRole).to.have.property('name');",
+									"        pm.expect(firstRole).to.have.property('description');",
+									"        pm.expect(firstRole).to.have.property('userCount');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/admin/roles",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "roles"]
+						},
+						"description": "Fetch all roles with user counts (Admin only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Role to User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has success flag', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.success).to.be.true;",
+									"});",
+									"",
+									"pm.test('Success message is present', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.message).to.include('assigned successfully');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{test_user_id}}\",\n  \"roleName\": \"moderator\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/admin/assign-role",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "assign-role"]
+						},
+						"description": "Assign a role to a user (Admin only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Role from User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has success flag', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.success).to.be.true;",
+									"});",
+									"",
+									"pm.test('Success message is present', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.message).to.include('removed successfully');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{test_user_id}}\",\n  \"roleName\": \"moderator\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/admin/remove-role",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "remove-role"]
+						},
+						"description": "Remove a role from a user (Admin only)"
+					},
+					"response": []
+				}
+			],
+			"description": "Admin endpoints for role management"
+		},
+		{
+			"name": "Admin - System",
+			"item": [
+				{
+					"name": "Check Admin Access",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200 or 403', function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+									"});",
+									"",
+									"if (pm.response.code === 200) {",
+									"    pm.test('User has admin access', function () {",
+									"        const responseJson = pm.response.json();",
+									"        pm.expect(responseJson.hasAccess).to.be.true;",
+									"    });",
+									"} else if (pm.response.code === 403) {",
+									"    pm.test('Access denied for non-admin user', function () {",
+									"        const responseJson = pm.response.json();",
+									"        pm.expect(responseJson.error).to.include('Admin access required');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/admin/check-access",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "check-access"]
+						},
+						"description": "Check if current user has admin access"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Admin Stats",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has success flag', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.success).to.be.true;",
+									"});",
+									"",
+									"pm.test('Stats object is present', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.stats).to.be.an('object');",
+									"});",
+									"",
+									"pm.test('Stats contain required metrics', function () {",
+									"    const responseJson = pm.response.json();",
+									"    const stats = responseJson.stats;",
+									"    pm.expect(stats).to.have.property('totalUsers');",
+									"    pm.expect(stats).to.have.property('totalRoles');",
+									"    pm.expect(stats).to.have.property('totalPermissions');",
+									"    pm.expect(stats).to.have.property('adminUsers');",
+									"});",
+									"",
+									"pm.test('Stats are numeric values', function () {",
+									"    const responseJson = pm.response.json();",
+									"    const stats = responseJson.stats;",
+									"    pm.expect(stats.totalUsers).to.be.a('number');",
+									"    pm.expect(stats.totalRoles).to.be.a('number');",
+									"    pm.expect(stats.totalPermissions).to.be.a('number');",
+									"    pm.expect(stats.adminUsers).to.be.a('number');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/admin/stats",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "stats"]
+						},
+						"description": "Get admin dashboard statistics"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Permissions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response has success flag', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.success).to.be.true;",
+									"});",
+									"",
+									"pm.test('Permissions array is present', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.permissions).to.be.an('array');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/admin/permissions",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "permissions"]
+						},
+						"description": "Get all permissions (Admin only)"
+					},
+					"response": []
+				}
+			],
+			"description": "Admin system endpoints"
+		},
+		{
+			"name": "Error Testing",
+			"item": [
+				{
+					"name": "Test Unauthorized Access",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 401', function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test('Error message for unauthorized access', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.error).to.include('Authentication required');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/admin/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "users"]
+						},
+						"description": "Test unauthorized access to admin endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Invalid Role Assignment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Error message for invalid role', function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.error).to.include('Invalid role name');",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"test-user-id\",\n  \"roleName\": \"invalid-role\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/admin/assign-role",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "assign-role"]
+						},
+						"description": "Test assigning invalid role"
+					},
+					"response": []
+				}
+			],
+			"description": "Error handling and edge case testing"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global pre-request script",
+					"// You can add global setup logic here",
+					"",
+					"// Example: Add timestamp to requests",
+					"pm.globals.set('timestamp', Date.now());"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global test script",
+					"// Common tests for all requests",
+					"",
+					"pm.test('Response time is acceptable', function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+					"});",
+					"",
+					"pm.test('Content-Type header is present', function () {",
+					"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "test_email",
+			"value": "admin@example.com",
+			"type": "string"
+		},
+		{
+			"key": "test_password",
+			"value": "password123",
+			"type": "string"
+		},
+		{
+			"key": "test_user_id",
+			"value": "test-user-id",
+			"type": "string"
+		}
+	]
+}

@@ -16,12 +16,13 @@ export const metadata: Metadata = {
 };
 
 interface ServewarePageProps {
-  searchParams: { page?: string; sort?: string };
+  searchParams: Promise<{ page?: string; sort?: string }>;
 }
 
-export default function ServewarePage({ searchParams }: ServewarePageProps) {
-  const currentPage = parseInt(searchParams.page || '1', 10);
-  const currentSort = (searchParams.sort as SortKey) || 'featured';
+export default async function ServewarePage({ searchParams }: ServewarePageProps) {
+  const params = await searchParams;
+  const currentPage = parseInt(params.page || '1', 10);
+  const currentSort = (params.sort as SortKey) || 'featured';
   const { products, pagination } = getServewareProducts(currentPage, 8, currentSort);
 
   const breadcrumbs = [

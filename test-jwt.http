@@ -1,0 +1,15 @@
+### Generate JWT Token (make sure you're logged in first)
+POST http://localhost:3000/api/test-jwt
+Content-Type: application/json
+
+### Verify JWT Token (replace YOUR_TOKEN_HERE with actual token)
+GET http://localhost:3000/api/test-jwt
+Authorization: Bearer YOUR_TOKEN_HERE
+
+### Test with session cookie (if you have the cookie value)
+POST http://localhost:3000/api/test-jwt
+Cookie: better-auth.session_token=YOUR_SESSION_COOKIE_VALUE
+
+### Example: Get orders with JWT token
+GET http://localhost:3000/api/orders
+Authorization: Bearer YOUR_TOKEN_HERE

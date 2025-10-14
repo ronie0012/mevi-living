@@ -1,0 +1,44 @@
+/* Mevi Living Chat Widget Styles */
+/* High specificity to override any conflicting styles */
+
+.mevi-living-chat-widget {
+  z-index: 99999 !important;
+  isolation: isolate !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure no other elements interfere with our chat widget */
+.mevi-living-chat-widget * {
+  box-sizing: border-box !important;
+}
+
+/* Hide any potential conflicting floating elements that might overlap */
+body > div:not([data-chat-widget]):not([id]):not([class*="next"]):not([class*="radix"]) {
+  /* This targets unnamed floating divs that might conflict */
+}
+
+/* Specific overrides for common conflict patterns */
+.mevi-living-chat-widget button {
+  pointer-events: auto !important;
+  position: relative !important;
+}
+
+/* Ensure the chat button is always clickable and visible */
+.mevi-living-chat-widget [data-chat-button] {
+  z-index: 99998 !important;
+  pointer-events: auto !important;
+  position: relative !important;
+}
+
+/* Ensure the chat modal has highest priority */
+.mevi-living-chat-widget [data-chat-modal] {
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  isolation: isolate !important;
+}
+
+/* Fix for potential overlay issues */
+.mevi-living-chat-widget {
+  contain: layout style !important;
+}
