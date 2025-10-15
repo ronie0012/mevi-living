@@ -1,0 +1,19 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm ci",
+  "env": {
+    "DATABASE_URL": "@database-url",
+    "DATABASE_AUTH_TOKEN": "@database-auth-token",
+    "BETTER_AUTH_SECRET": "@better-auth-secret",
+    "JWT_SECRET": "@jwt-secret",
+    "OPENAI_API_KEY": "@openai-api-key"
+  },
+  "regions": ["iad1"],
+  "functions": {
+    "app/api/**/*.js": {
+      "maxDuration": 30
+    }
+  }
+}
